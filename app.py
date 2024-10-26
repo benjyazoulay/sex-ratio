@@ -7,7 +7,7 @@ from streamlit_folium import st_folium
 import plotly.graph_objects as go
 
 # Configuration de la page Streamlit pour utiliser toute la largeur
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide",page_title="Mating App")
 
 # Suppression des marges par défaut de Streamlit
 st.markdown("""
