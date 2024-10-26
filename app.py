@@ -76,8 +76,8 @@ with st.container():
     pop_max = df_filtered['total_age_population'].max()
 
     # Création de la carte
-    m = folium.Map(location=[46.603354, 1.888334], zoom_start=6, control_scale=True)
-    folium.TileLayer('CartoDB Voyager No Labels').add_to(m)
+    m = folium.Map(location=[46.603354, 1.888334], zoom_start=6, tiles='cartodb dark_matter', control_scale=True)
+
     Fullscreen().add_to(m)
 
     # Colormap
