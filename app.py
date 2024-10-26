@@ -4,6 +4,7 @@ import folium
 from folium.plugins import Fullscreen
 from branca.colormap import LinearColormap
 from streamlit_folium import st_folium
+import plotly.graph_objects as go
 
 # Configuration de la page Streamlit pour utiliser toute la largeur
 st.set_page_config(layout="wide")
@@ -42,6 +43,23 @@ def calculer_sex_ratio(df, age_min, age_max):
     df_filtered = df[df['LIBGEO'] != 'Fleury-Mérogi']
     df_top_300 = df_filtered.nlargest(300, 'total_age_population')
     return df_top_300
+
+def get_color(ratio):
+    """Retourne une couleur RGB basée sur le ratio H/F"""
+    if ratio <= 75:
+        return 'rgb(255, 0, 0)'  # Rouge
+    elif ratio >= 125:
+        return 'rgb(0, 0, 255)'  # Bleu
+    elif ratio == 100:
+        return 'rgb(255, 255, 255)'  # Blanc
+    elif ratio < 100:
+        # Interpolation entre rouge et blanc
+        factor = (ratio - 75) / 25
+        return f'rgb({255}, {int(255*factor)}, {int(255*factor)})'
+    else:
+        # Interpolation entre blanc et bleu
+        factor = (ratio - 100) / 25
+        return f'rgb({int(255*(1-factor))}, {int(255*(1-factor))}, 255)'
 
 # Interface utilisateur dans un conteneur
 with st.container():
@@ -82,12 +100,51 @@ with st.container():
             popup=f"<strong>{row['LIBGEO']}</strong><br>H/F: {row['H/F']:.2f}<br>Population: {row['total_age_population']}"
         ).add_to(m)
 
-    # Calcul dynamique de la hauteur en fonction de la largeur de l'écran
-    width = "100%"
-    height = 700
-
     # Affichage de la carte avec des dimensions responsives
-    st_folium(m, width=width, height=height, returned_objects=[])
+    st_folium(m, width="100%", height=700, returned_objects=[])
     
     # Source en petit et collée à la carte
     st.markdown("<div style='margin-top: -1rem; font-size: 0.8em;'>Source INSEE 2021</div>", unsafe_allow_html=True)
+
+    # Création du barplot horizontal
+    df_sorted = df_filtered.sort_values('H/F', ascending=True)
+    
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        y=df_sorted['LIBGEO'],
+        x=df_sorted['H/F'],
+        orientation='h',
+        marker=dict(
+            color=[get_color(ratio) for ratio in df_sorted['H/F']],
+            line=dict(width=0)
+        ),
+        hovertemplate='<b>%{y}</b><br>' +
+                      'Ratio H/F: %{x:.1f}<br>' +
+                      '<extra></extra>'
+    ))
+
+    fig.update_layout(
+        title=dict(
+            text=f"Ratio H/F par ville (population {age_min}-{age_max} ans)",
+            x=0.5,
+            y=0.98
+        ),
+        xaxis_title="Ratio H/F",
+        yaxis_title="Villes",
+        height=800,  # Hauteur fixe pour accommoder toutes les villes
+        margin=dict(l=200, r=20, t=40, b=20),  # Marge gauche augmentée pour les noms de villes
+        showlegend=False,
+        plot_bgcolor='white',
+        xaxis=dict(
+            gridcolor='lightgray',
+            zeroline=True,
+            zerolinecolor='black',
+            zerolinewidth=1
+        )
+    )
+
+    # Ajout d'une ligne verticale à 100 (parité)
+    fig.add_vline(x=100, line_width=1, line_dash="dash", line_color="black")
+
+    # Affichage du graphique
+    st.plotly_chart(fig, use_container_width=True)
