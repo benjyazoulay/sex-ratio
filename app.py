@@ -140,14 +140,14 @@ with st.container():
         plot_bgcolor='black',
         xaxis=dict(
             gridcolor='lightgray',
-            zeroline=True,
+            zeroline=False,
             zerolinecolor='white',
             zerolinewidth=1
         )
     )
 
     # Ajout d'une ligne verticale à 100 (parité)
-    fig.add_vline(x=100, line_width=1, line_dash="dash", line_color="black")
+    fig.add_vline(x=100, line_width=1, line_dash="dash", line_color="white")
 
     # Affichage du graphique
     st.plotly_chart(fig, use_container_width=True)
