@@ -76,7 +76,12 @@ with st.container():
     pop_max = df_filtered['total_age_population'].max()
 
     # Création de la carte
-    m = folium.Map(location=[46.603354, 1.888334], zoom_start=6, tiles='Stamen Toner', control_scale=True,attr="")
+    m = folium.Map(
+    location=[46.603354, 1.888334],
+    zoom_start=6,
+    tiles='Stamen Toner',
+    control_scale=True,
+    attr="Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap contributors")
     Fullscreen().add_to(m)
 
     # Colormap
