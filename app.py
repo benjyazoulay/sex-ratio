@@ -5,6 +5,7 @@ from folium.plugins import Fullscreen
 from branca.colormap import LinearColormap
 from streamlit_folium import st_folium
 import plotly.graph_objects as go
+import numpy as np
 
 # Configuration de la page Streamlit pour utiliser toute la largeur
 st.set_page_config(layout="wide",page_title="Mating App",page_icon="❤️")
@@ -89,7 +90,8 @@ with st.container():
 
     # Ajout des cercles
     for idx, row in df_filtered.iterrows():
-        radius = 5 + (row['total_age_population'] - pop_min) / (pop_max - pop_min) * 25
+        # Utiliser une échelle logarithmique pour le rayon
+        radius = 5 + (np.log(row['total_age_population'] + 1) - np.log(pop_min + 1)) / (np.log(pop_max + 1) - np.log(pop_min + 1)) * 25
         folium.CircleMarker(
             location=[row['lat'], row['lon']],
             radius=radius,
@@ -99,6 +101,7 @@ with st.container():
             fill_opacity=0.7,
             popup=f"<strong>{row['LIBGEO']}</strong><br>H/F: {row['H/F']:.2f}<br>Population: {row['total_age_population']}"
         ).add_to(m)
+
 
     # Affichage de la carte avec des dimensions responsives
     st_folium(m, width="100%", height=700, returned_objects=[])
