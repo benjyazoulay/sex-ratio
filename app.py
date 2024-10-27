@@ -22,10 +22,14 @@ st.markdown("""
         .element-container {
             margin-bottom: 0.5rem;
         }
+        .slider {
+            margin-bottom: -1rem;  /* Ajustez cette valeur pour contrôler l'espace sous le slider */
+        }
         #MainMenu {visibility: hidden;}
         footer {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
+
 
 # Chargement des données
 file_path = 'df.csv'
@@ -62,15 +66,22 @@ def get_color(ratio):
         factor = (ratio - 100) / 25
         return f'rgb({int(255*(1-factor))}, {int(255*(1-factor))}, 255)'
 
+st.markdown("""
+    <style>
+        /* Cible le conteneur du slider et réduit les marges */
+        .stSlider {
+            margin-top: -1.5rem;  /* Ajuster cette valeur pour réduire l'espacement */
+            margin-bottom: -5rem; /* Ajuster cette valeur si nécessaire */
+        }
+    </style>
+""", unsafe_allow_html=True)
 # Interface utilisateur dans un conteneur
 with st.container():
    
     # Slider dans une colonne plus étroite
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("<div class='slider'>", unsafe_allow_html=True)
         age_min, age_max = st.slider("Sélectionnez l'intervalle d'âge :", 0, 100, (20, 25))
-        st.markdown("</div>", unsafe_allow_html=True)
 
 
     # Calculs
