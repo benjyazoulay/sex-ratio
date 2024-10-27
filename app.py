@@ -68,7 +68,10 @@ with st.container():
     # Slider dans une colonne plus étroite
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        age_min, age_max = st.slider("Sélectionnez l'intervalle d'âge :", 0, 100, (20, 30))
+        st.markdown("<div class='slider'>", unsafe_allow_html=True)
+        age_min, age_max = st.slider("Sélectionnez l'intervalle d'âge :", 0, 100, (20, 25))
+        st.markdown("</div>", unsafe_allow_html=True)
+
 
     # Calculs
     df_filtered = calculer_sex_ratio(df, age_min, age_max)
