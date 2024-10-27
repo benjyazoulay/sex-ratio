@@ -185,10 +185,12 @@ with st.container():
 
     with col1:
         st_folium(m, width="100%", height=700, returned_objects=[])
-        st.markdown("<div style='margin-top: -1rem; font-size: 0.8em;'>Source INSEE 2021</div>", unsafe_allow_html=True)
+        
 
     with col2:
         st.plotly_chart(fig, use_container_width=True)
+        st.markdown("<div style='margin-top: -1rem; font-size: 0.8em; text-align: right;'>Source INSEE 2021</div>", unsafe_allow_html=True)
+
 
     # Fermeture du conteneur
     st.markdown('</div>', unsafe_allow_html=True)
