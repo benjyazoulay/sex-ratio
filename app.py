@@ -146,7 +146,7 @@ with st.container():
         height=800,  # Hauteur fixe pour accommoder toutes les villes
         margin=dict(l=200, r=20, t=40, b=20),  # Marge gauche augmentée pour les noms de villes
         showlegend=False,
-        plot_bgcolor='black',
+        plot_bgcolor='#0F1116',
         xaxis=dict(
             gridcolor='lightgray',
             zeroline=False,
