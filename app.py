@@ -70,7 +70,7 @@ st.markdown("""
     <style>
         /* Cible le conteneur du slider et réduit les marges */
         .stSlider {
-            margin-top: -1.5rem;  /* Ajuster cette valeur pour réduire l'espacement */
+            margin-top: 0rem;  /* Ajuster cette valeur pour réduire l'espacement */
             margin-bottom: -5rem; /* Ajuster cette valeur si nécessaire */
         }
     </style>
@@ -80,8 +80,10 @@ with st.container():
    
     # Slider dans une colonne plus étroite
     col1, col2, col3 = st.columns([1, 2, 1])
+    with col1:
+        st.markdown("<div style='margin-top: 0.5rem; font-size: 0.8em; text-align: right;'>Tranche d'âges</div>", unsafe_allow_html=True)
     with col2:
-        age_min, age_max = st.slider("Sélectionnez l'intervalle d'âge :", 0, 100, (20, 25))
+        age_min, age_max = st.slider("Tranche d'âges :", 0, 100, (20, 25), label_visibility="collapsed")
 
 
     # Calculs
