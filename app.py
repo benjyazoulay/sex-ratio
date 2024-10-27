@@ -103,12 +103,7 @@ with st.container():
         ).add_to(m)
 
 
-    # Affichage de la carte avec des dimensions responsives
-    st_folium(m, width="100%", height=700, returned_objects=[])
     
-    # Source en petit et collée à la carte
-    st.markdown("<div style='margin-top: -1rem; font-size: 0.8em;'>Source INSEE 2021</div>", unsafe_allow_html=True)
-
     # Création du barplot horizontal
     df_sorted = df_filtered.sort_values('H/F', ascending=True)
     
@@ -149,5 +144,51 @@ with st.container():
     # Ajout d'une ligne verticale à 100 (parité)
     fig.add_vline(x=100, line_width=1, line_dash="dash", line_color="white")
 
-    # Affichage du graphique
-    st.plotly_chart(fig, use_container_width=True)
+    # Injecter du JavaScript pour détecter les changements de taille de fenêtre
+    st.markdown(
+        """
+        <script>
+            function updateLayout() {
+                const container = document.getElementById("responsive-container");
+                if (window.innerWidth > 1200) {
+                    container.classList.add("wide-layout");
+                    container.classList.remove("stacked-layout");
+                } else {
+                    container.classList.add("stacked-layout");
+                    container.classList.remove("wide-layout");
+                }
+            }
+            window.addEventListener("resize", updateLayout);
+            document.addEventListener("DOMContentLoaded", updateLayout);
+        </script>
+        
+        <style>
+            #responsive-container.wide-layout {
+                display: flex;
+                flex-direction: row;
+                gap: 2rem;
+            }
+            #responsive-container.stacked-layout {
+                display: flex;
+                flex-direction: column;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Créer un conteneur adaptatif avec ID unique pour être ciblé par le CSS et JavaScript
+    st.markdown('<div id="responsive-container">', unsafe_allow_html=True)
+
+    # Affichage de la carte et du graphique dans un conteneur adaptatif
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st_folium(m, width="100%", height=700, returned_objects=[])
+        st.markdown("<div style='margin-top: -1rem; font-size: 0.8em;'>Source INSEE 2021</div>", unsafe_allow_html=True)
+
+    with col2:
+        st.plotly_chart(fig, use_container_width=True)
+
+    # Fermeture du conteneur
+    st.markdown('</div>', unsafe_allow_html=True)
